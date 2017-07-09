@@ -1,0 +1,36 @@
+<script type="text/javascript">
+      google.charts.load('current', {'packages':['corechart']});
+      google.charts.setOnLoadCallback(drawChart);
+
+function drawChart() {
+
+    var data = google.visualization.arrayToDataTable([
+        ['Meses', 'Cantidades'],
+        ['Ene', {{ valores[0] }}],
+        ['Feb', {{ valores[1] }}],
+        ['Mar', {{ valores[2] }}],
+        ['Abr', {{ valores[3] }}],
+        ['May', {{ valores[4] }}],
+        ['Jun', {{ valores[5] }}],
+        ['Jul', {{ valores[6] }}],
+        ['Ago', {{ valores[7] }}],
+        ['Sep', {{ valores[8] }}],
+        ['Oct', {{ valores[9] }}],
+        ['Nov', {{ valores[10] }}],
+        ['Dic', {{ valores[11] }}]
+    ]);
+
+    var options = {
+        title: 'Ventas del Producto en el Año especificado',
+        hAxis: {title: 'Year', titleTextStyle: {color: '#333'}},
+        vAxis: {minValue: 0},
+        colors: ['#fbc361'],
+    };
+
+    var chart = new google.visualization.AreaChart(document.getElementById('chart_div'));
+    chart.draw(data, options);
+}
+</script>
+
+<div style="height: 25vh;" id="chart_div">
+</div>

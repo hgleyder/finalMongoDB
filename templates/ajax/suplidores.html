@@ -1,0 +1,8 @@
+    {% for value in suplidores %}
+    <tr>
+        <td> {{ value.nombre }} </td>
+        <td> <a href="suplidores/remove/{{value._id}}" class="btn btn-danger">
+            <i class="material-icons">not_interested</i>
+        </a> </td>
+    </tr>
+{% endfor %}

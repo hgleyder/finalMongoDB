@@ -1,0 +1,384 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<link rel="apple-touch-icon" sizes="76x76" href="static/assets/img/apple-icon.png" />
+	<link rel="icon" type="image/png" href="static/assets/img/favicon.png" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+
+	<title>Facturacion Mongo</title>
+
+	<meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />
+    <meta name="viewport" content="width=device-width" />
+
+    <!-- Bootstrap core CSS     -->
+    <link href="static/assets/css/bootstrap.min.css" rel="stylesheet" />
+
+    <!--  Material Dashboard CSS    -->
+    <link href="static/assets/css/material-dashboard.css" rel="stylesheet"/>
+
+    <!--  CSS for Demo Purpose, don't include it in your project     -->
+    <link href="static/assets/css/demo.css" rel="stylesheet" />
+
+
+    <!--     Fonts and icons     -->
+    <link href="http://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css" rel="stylesheet">
+    <link href='http://fonts.googleapis.com/css?family=Roboto:400,700,300|Material+Icons' rel='stylesheet' type='text/css'>
+
+
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<script type="text/javascript">
+  google.charts.load('current', {packages: ['corechart']});
+  google.charts.setOnLoadCallback(drawChart);
+
+
+</script>
+
+
+</head>
+
+<body>
+
+	<div class="wrapper">
+
+	    <div class="sidebar" data-color="green" data-image="static/assets/img/sidebar-1.jpg">
+			<!--
+		        Tip 1: You can change the color of the sidebar using: data-color="purple | blue | green | orange | red"
+
+		        Tip 2: you can also add an image using data-image tag
+		    -->
+
+			<div class="logo">
+				<a href="http://www.creative-tim.com" class="simple-text">
+					Gleyder Hernandez
+				</a>
+			</div>
+
+	    	<div class="sidebar-wrapper">
+	            <ul class="nav">
+	                <li>
+	                    <a href="/home">
+	                        <i class="material-icons">dashboard</i>
+	                        <p>Dashboard</p>
+	                    </a>
+	                </li>
+                    <li >
+	                    <a href="/facturacion">
+	                        <i class="material-icons">dashboard</i>
+	                        <p>Facturacion</p>
+	                    </a>
+	                </li>
+                     <li class="active">
+	                    <a href="/estadisticas">
+	                        <i class="material-icons">dashboard</i>
+	                        <p>Estadisticas</p>
+	                    </a>
+	                </li>
+	            </ul>
+	    	</div>
+	    </div>
+
+	    <div class="main-panel">
+			<nav class="navbar navbar-transparent navbar-absolute">
+				<div class="container-fluid">
+					<div class="navbar-header">
+						<button type="button" class="navbar-toggle" data-toggle="collapse">
+							<span class="sr-only">Toggle navigation</span>
+							<span class="icon-bar"></span>
+							<span class="icon-bar"></span>
+							<span class="icon-bar"></span>
+						</button>
+					</div>
+
+                </div>
+			</nav>
+
+			<div class="content">
+				<div class="container-fluid">
+					<div class="row">
+
+        <div class="col-md-6">
+							<div class="card">
+								<div class="card-header card-chart" data-background-color="blue" style="background-color: white">
+									<div style="height: 25vh;" class="ct-chart" id="divChartBestProducto"></div>
+								</div>
+								<div class="card-content">
+									<h4 class="title">Producto Mas activo en la Fecha seleccionada</h4>
+									<div class="col-md-5">
+                                    <select class="form-control" id="c1year" name="producto">
+                                       {% for value in years %}
+                                      <option>{{ value}}</option>
+                                        {% endfor %}
+                                     </select>
+                                    </div>
+                                    <div class="col-md-5">
+                                    <select class="form-control" id="c1mes" name="producto">
+                                           <option>1</option>
+                                           <option>2</option>
+                                           <option>3</option>
+                                           <option>4</option>
+                                           <option>5</option>
+                                           <option>6</option>
+                                           <option>7</option>
+                                           <option>8</option>
+                                           <option>9</option>
+                                           <option>10</option>
+                                           <option>11</option>
+                                           <option>12</option>
+                                     </select>
+                                    </div>
+
+                                    <div class="col-md-2">
+                                        <br>
+                                    <a id="reloadChartBestProducto" class="btn btn-info" style="margin-top: 2px">Ver</a>
+                                     </select>
+                                    </div>
+								</div>
+							</div>
+						</div>
+
+
+                        <div class="col-md-6">
+							<div class="card">
+								<div class="card-header card-chart" data-background-color="green" style="background-color: white">
+									<div style="height: 25vh;" class="ct-chart" id="divChartBestCliente"></div>
+								</div>
+								<div class="card-content">
+									<h4 class="title">Cliente Mas activo en la Fecha seleccionada</h4>
+									<div class="col-md-5">
+                                    <select class="form-control" id="c2year" name="producto">
+                                       {% for value in years %}
+                                      <option>{{ value}}</option>
+                                        {% endfor %}
+                                     </select>
+                                    </div>
+                                    <div class="col-md-5">
+                                    <select class="form-control" id="c2mes" name="producto">
+                                           <option>1</option>
+                                           <option>2</option>
+                                           <option>3</option>
+                                           <option>4</option>
+                                           <option>5</option>
+                                           <option>6</option>
+                                           <option>7</option>
+                                           <option>8</option>
+                                           <option>9</option>
+                                           <option>10</option>
+                                           <option>11</option>
+                                           <option>12</option>
+                                     </select>
+                                    </div>
+
+                                    <div class="col-md-2">
+                                        <br>
+                                    <a id="reloadChartBestCliente" class="btn btn-success" style="margin-top: 2px">Ver</a>
+                                     </select>
+                                    </div>
+								</div>
+							</div>
+						</div>
+
+
+                           <div class="col-md-6">
+							<div class="card">
+								<div class="card-header card-chart" data-background-color="red">
+									<div style="height: 25vh;" class="ct-chart" id="divChartClienteYear"></div>
+								</div>
+								<div class="card-content">
+									<h4 class="title">Consumo total por el Cliente Anualmente</h4>
+									<div class="col-md-5">
+                                    <select class="form-control" id="c3year" name="producto">
+                                       {% for value in years %}
+                                      <option>{{ value}}</option>
+                                        {% endfor %}
+                                     </select>
+                                    </div>
+                                    <div class="col-md-5">
+                                    <select class="form-control" id="c3cliente" name="producto">
+                                     {% for value in clientes %}
+                                      <option>{{ value.nombre}}</option>
+                                        {% endfor %}
+                                     </select>
+                                    </div>
+
+                                    <div class="col-md-2">
+                                        <br>
+                                    <a id="reloadChartClienteYear" class="btn btn-danger" style="margin-top: 2px">Ver</a>
+                                     </select>
+                                    </div>
+								</div>
+							</div>
+						</div>
+
+
+                        <div class="col-md-6">
+							<div class="card">
+								<div class="card-header card-chart" data-background-color="orange">
+									<div style="height: 25vh;" class="ct-chart" id="divChartProductoYear"></div>
+								</div>
+								<div class="card-content">
+									<h4 class="title">Cantidad de Producto Vendidos Anualmente</h4>
+									<div class="col-md-5">
+                                    <select class="form-control" id="c4year" name="producto">
+                                       {% for value in years %}
+                                      <option>{{ value}}</option>
+                                        {% endfor %}
+                                     </select>
+                                    </div>
+                                    <div class="col-md-5">
+                                    <select class="form-control" id="c4producto" name="producto">
+                                     {% for value in productos %}
+                                      <option>{{ value.nombre}}</option>
+                                        {% endfor %}
+                                     </select>
+                                    </div>
+
+                                    <div class="col-md-2">
+                                        <br>
+                                    <a id="reloadChartProductoYear" class="btn btn-warning" style="margin-top: 2px">Ver</a>
+                                     </select>
+                                    </div>
+								</div>
+							</div>
+						</div>
+
+
+
+                     <div class="col-md-12">
+							<div class="card">
+								<div class="card-header card-chart" data-background-color="purple" style="background-color: white">
+									<div style="height: 35vh;" class="ct-chart" id="divChartEstimarInventario"></div>
+								</div>
+								<div class="card-content">
+									<h4 class="title">Estimacion de Inventario para el Producto en la fecha seleccionada</h4>
+									<div class="col-md-5">
+                                    <input type="text" class="form-control" placeholder="01-12-2017" id="c5fecha" name="producto" />
+                                    </div>
+                                    <div class="col-md-5">
+                                    <select class="form-control" id="c5producto" name="producto">
+                                        {% for value2 in productos2 %}
+                                      <option>{{ value2.nombre}}</option>
+                                        {% endfor %}
+                                     </select>
+                                    </div>
+
+                                    <div class="col-md-2">
+                                        <br>
+                                    <a id="reloadChartEstimarInventario" class="btn btn-primary" style="margin-top: 2px">Ver</a>
+                                     </select>
+                                    </div>
+								</div>
+							</div>
+						</div>
+
+					</div>
+
+					</div>
+				</div>
+			</div>
+
+		</div>
+	</div>
+
+
+	<!--   Core JS Files   -->
+	<script src="static/assets/js/jquery-3.1.0.min.js" type="text/javascript"></script>
+	<script src="static/assets/js/bootstrap.min.js" type="text/javascript"></script>
+	<script src="static/assets/js/material.min.js" type="text/javascript"></script>
+
+	<!--  Charts Plugin -->
+	<script src="static/assets/js/chartist.min.js"></script>
+
+	<!--  Notifications Plugin    -->
+	<script src="static/assets/js/bootstrap-notify.js"></script>
+
+	<!--  Google Maps Plugin    -->
+	<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js"></script>
+
+	<!-- Material Dashboard javascript methods -->
+	<script src="static/assets/js/material-dashboard.js"></script>
+
+	<!-- Material Dashboard DEMO methods, don't include it in your project! -->
+	<script src="static/assets//js/demo.js"></script>
+
+	<script type="text/javascript">
+    	$(document).ready(function(){
+
+			// Javascript method's body can be found in assets/js/demos.js
+        	demo.initDashboardPageCharts();
+
+    	});
+	</script>
+
+
+            <script>
+        $(document).ready(function(){
+            $("#reloadChartBestProducto").click(function(){
+                var mes = $("#c1mes").val();
+                var year = $("#c1year").val();
+                $.get("/estadisticas/BestProducto/"+year+"/"+mes, function(data){
+                    $("#divChartBestProducto").html(data);
+                });
+            });
+        })
+
+    </script>
+
+
+        <script>
+        $(document).ready(function(){
+            $("#reloadChartBestCliente").click(function(){
+                var mes = $("#c2mes").val();
+                var year = $("#c2year").val();
+                $.get("/estadisticas/BestCliente/"+year+"/"+mes, function(data){
+                    $("#divChartBestCliente").html(data);
+                });
+            });
+        })
+
+    </script>
+
+    <script>
+        $(document).ready(function(){
+            $("#reloadChartProductoYear").click(function(){
+                var prod = $("#c4producto").val();
+                var year = $("#c4year").val();
+                $.get("/estadisticas/ProductosYear/"+prod+"/"+year, function(data){
+                    $("#divChartProductoYear").html(data);
+                });
+            });
+        })
+
+    </script>
+
+    <script>
+        $(document).ready(function(){
+            $("#reloadChartClienteYear").click(function(){
+                var cli = $("#c3cliente").val();
+                var year = $("#c3year").val();
+                console.log(cli)
+                $.get("/estadisticas/ClientesYear/"+cli+"/"+year, function(data){
+                    $("#divChartClienteYear").html(data);
+                });
+            });
+        })
+    </script>
+
+
+    <script>
+        $(document).ready(function(){
+            $("#reloadChartEstimarInventario").click(function(){
+                var date = $("#c5fecha").val();
+                var prod = $("#c5producto").val();
+                  console.log(date)
+                $.get("/estadisticas/EstimarInventario/"+prod+"/"+date, function(data){
+                    $("#divChartEstimarInventario").html(data);
+                });
+            });
+        })
+    </script>
+
+</body>
+
+
+</html>

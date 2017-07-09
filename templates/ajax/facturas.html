@@ -1,0 +1,12 @@
+  {% for value in facturas %}
+    <tr>
+        <td> {{ value.cliente }} </td>
+        <td> {{ value.montoTotal }} </td>
+        <td> {{ value.anio }} </td>
+        <td> {{ value.mes }} </td>
+        <td> {{ value.dia}} </td>
+        <td> <a href="facturas/remove/{{value._id}}" class="btn btn-danger">
+            <i class="material-icons">not_interested</i>
+        </a> </td>
+    </tr>
+{% endfor %}

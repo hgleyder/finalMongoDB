@@ -1,0 +1,10 @@
+    {% for value in productos %}
+    <tr>
+        <td> {{ value.nombre }} </td>
+        <td> {{ value.precio }} </td>
+        <td> {{ value.CantidadDisponible }} </td>
+        <td> <a href="productos/remove/{{value._id}}" class="btn btn-danger">
+            <i class="material-icons">not_interested</i>
+        </a> </td>
+    </tr>
+{% endfor %}

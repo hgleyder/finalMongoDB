@@ -1,0 +1,9 @@
+    {% for value in clientes %}
+    <tr>
+        <td> {{ value.nombre }} </td>
+        <td> {{ value.pais }} </td>
+        <td> <a href="clientes/remove/{{value._id}}" class="btn btn-danger">
+            <i class="material-icons">not_interested</i>
+        </a> </td>
+    </tr>
+{% endfor %}

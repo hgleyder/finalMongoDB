@@ -1,0 +1,560 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<link rel="apple-touch-icon" sizes="76x76" href="static/assets/img/apple-icon.png" />
+	<link rel="icon" type="image/png" href="static/assets/img/favicon.png" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+
+	<title>Facturacion Mongo</title>
+
+	<meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />
+    <meta name="viewport" content="width=device-width" />
+
+    <!-- Bootstrap core CSS     -->
+    <link href="static/assets/css/bootstrap.min.css" rel="stylesheet" />
+
+    <!--  Material Dashboard CSS    -->
+    <link href="static/assets/css/material-dashboard.css" rel="stylesheet"/>
+
+    <!--  CSS for Demo Purpose, don't include it in your project     -->
+    <link href="static/assets/css/demo.css" rel="stylesheet" />
+
+
+    <!--     Fonts and icons     -->
+    <link href="http://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css" rel="stylesheet">
+    <link href='http://fonts.googleapis.com/css?family=Roboto:400,700,300|Material+Icons' rel='stylesheet' type='text/css'>
+
+</head>
+
+<body>
+
+	<div class="wrapper">
+
+	    <div class="sidebar" data-color="purple" data-image="static/assets/img/sidebar-1.jpg">
+			<!--
+		        Tip 1: You can change the color of the sidebar using: data-color="purple | blue | green | orange | red"
+
+		        Tip 2: you can also add an image using data-image tag
+		    -->
+
+			<div class="logo">
+				<a href="http://www.creative-tim.com" class="simple-text">
+					Gleyder Hernandez
+				</a>
+			</div>
+
+	    	<div class="sidebar-wrapper">
+	            <ul class="nav">
+	                <li class="active">
+	                    <a href="/home">
+	                        <i class="material-icons">dashboard</i>
+	                        <p>Dashboard</p>
+	                    </a>
+	                </li>
+                    <li >
+	                    <a href="/facturacion">
+	                        <i class="material-icons">dashboard</i>
+	                        <p>Facturacion</p>
+	                    </a>
+	                </li>
+                    <li>
+	                    <a href="/estadisticas">
+	                        <i class="material-icons">dashboard</i>
+	                        <p>Estadisticas</p>
+	                    </a>
+	                </li>
+	            </ul>
+	    	</div>
+	    </div>
+
+	    <div class="main-panel">
+			<nav class="navbar navbar-transparent navbar-absolute">
+				<div class="container-fluid">
+					<div class="navbar-header">
+						<button type="button" class="navbar-toggle" data-toggle="collapse">
+							<span class="sr-only">Toggle navigation</span>
+							<span class="icon-bar"></span>
+							<span class="icon-bar"></span>
+							<span class="icon-bar"></span>
+						</button>
+					</div>
+
+                </div>
+			</nav>
+
+			<div class="content">
+				<div class="container-fluid">
+					<div class="row">
+						<div class="col-lg-3 col-md-3 col-sm-12">
+							<div class="card card-stats">
+								<div class="card-header" data-background-color="orange">
+									<i class="material-icons">content_copy</i>
+								</div>
+								<div class="card-content">
+									<p class="category">Facturas Generadas</p>
+									<h3 class="title">{{ cantidadFacturas }}</h3>
+								</div>
+							</div>
+						</div>
+
+                                         <div class="col-lg-3 col-md-3 col-sm-12">
+							<div class="card card-stats">
+								<div class="card-header" data-background-color="purple">
+									<i class="material-icons">perm_identity</i>
+								</div>
+								<div class="card-content">
+									<p class="category">Suplidores Registrados</p>
+									<h3 class="title">{{ cantSuplidor }}</h3>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-3 col-md-3 col-sm-12">
+							<div class="card card-stats">
+								<div class="card-header" data-background-color="blue">
+									<i class="material-icons">store</i>
+								</div>
+								<div class="card-content">
+									<p class="category">Productos Registrados</p>
+									<h3 class="title">{{ cantidadProductos }}</h3>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-3 col-md-3 col-sm-12">
+							<div class="card card-stats">
+								<div class="card-header" data-background-color="green">
+									<i class="material-icons">perm_identity</i>
+								</div>
+								<div class="card-content">
+									<p class="category">Clientes Registrados</p>
+									<h3 class="title">{{ cantidadClientes }}</h3>
+								</div>
+							</div>
+						</div>
+
+
+					</div>
+
+					<div class="row">
+
+                    <div class="col-lg-12 col-md-12">
+							<div class="card">
+	                            <div class="card-header" data-background-color="blue">
+	                                <h4 class="title">Productos</h4>
+	                                <p class="category">Gestion de Productos</p>
+	                            </div>
+                          <div class="col-md-12">
+                            <button type="button" style="float: right; margin-right: 16px;" class="btn btn-default" data-toggle="modal" data-target="#addProductoModal">Agregar Nuevo Producto</button>
+	                          </div>
+	                              <div class="card-content table-responsive">
+
+	                                <table class="table table-hover">
+	                                    <thead class="text-info">
+	                                    	<th>Nombre</th>
+	                                    	<th>Precio</th>
+                                            <th>Cantidad Disponible</th>
+                                        <th></th>
+	                                    </thead>
+	                                    <tbody id="productos">
+	                                        {% for value in productos %}
+                                            <tr>
+                                               <td> {{ value.nombre }} </td>
+                                               <td> ${{ value.precio }} </td>
+                                               <td> {{ value.CantidadDisponible }} </td>
+                                                <td> <a href="productos/remove/{{value._id}}" class="btn btn-danger">
+                                                   <i class="material-icons">not_interested</i>
+                                                </a>
+                                                    <a data-toggle="modal" data-target="#SuplirModal" class="btn btn-primary">
+                                                   Suplir
+                                                </a>
+                                                </td>
+                                            </tr>
+                                         {% endfor %}
+	                                     </tbody>
+	                                </table>
+	                            </div>
+
+                             <div class="col-md-12 col-lg-12 text-center">
+                                <nav aria-label="Page navigation">
+                                    <ul class="pagination pagination-lg">
+                                        {% for pagina in paginasProductos %}
+                                                <li class="page-item">
+                                                    <button class="page-link2" value="{{ pagina }}">{{ pagina }}</button>
+                                                </li>
+                                         {% endfor %}
+                                        </#if>
+                                    </ul>
+                                </nav>
+                             </div>
+
+	                        </div>
+						</div>
+
+
+                                        <div class="col-lg-6 col-md-12">
+							<div class="card">
+	                            <div class="card-header" data-background-color="purple">
+	                                <h4 class="title">Suplidores</h4>
+	                                <p class="category">Gestion de Suplidores</p>
+	                            </div>
+                          <div class="col-md-12">
+                            <button type="button" style="float: right; margin-right: 16px;" class="btn btn-default" data-toggle="modal" data-target="#addSuplidorModal">Agregar Nuevo Suplidor</button>
+	                          </div>
+	                              <div class="card-content table-responsive">
+
+	                                <table class="table table-hover">
+	                                    <thead class="text-info">
+	                                    	<th>Nombre del Suplidor</th>
+                                        <th></th>
+	                                    </thead>
+	                                    <tbody id="suplidores">
+	                                        {% for value in suplidores %}
+                                            <tr>
+                                               <td> {{ value.nombre }} </td>
+                                               <td> <a href="suplidores/remove/{{value._id}}" class="btn btn-danger">
+                                                   <i class="material-icons">not_interested</i>
+                                                </a> </td>
+                                            </tr>
+                                         {% endfor %}
+	                                     </tbody>
+	                                </table>
+	                            </div>
+
+                             <div class="col-md-12 col-lg-12 text-center">
+                                <nav aria-label="Page navigation">
+                                    <ul class="pagination pagination-lg">
+                                        {% for pagina in paginasSuplidores %}
+                                                <li class="page-item">
+                                                    <button class="page-link3" value="{{ pagina }}">{{ pagina }}</button>
+                                                </li>
+                                         {% endfor %}
+                                        </#if>
+                                    </ul>
+                                </nav>
+                             </div>
+
+	                        </div>
+						</div>
+
+
+                         <div class="col-lg-6 col-md-12">
+							<div class="card">
+	                            <div class="card-header" data-background-color="green">
+	                                <h4 class="title">Clientes</h4>
+	                                <p class="category">Gestion de clientes</p>
+	                            </div>
+                          <div class="col-md-12">
+                            <button type="button" style="float: right; margin-right: 16px;" class="btn btn-default" data-toggle="modal" data-target="#addClientModal">Agregar Nuevo Cliente</button>
+	                          </div>
+	                              <div class="card-content table-responsive">
+
+	                                <table class="table table-hover">
+	                                    <thead class="text-success">
+	                                    	<th>Nombre</th>
+	                                    	<th>Pais</th>
+                                        <th></th>
+	                                    </thead>
+	                                    <tbody id="clientes">
+	                                        {% for value in clientes %}
+                                            <tr>
+                                               <td> {{ value.nombre }} </td>
+                                               <td> {{ value.pais }} </td>
+                                                <td> <a href="clientes/remove/{{value._id}}" class="btn btn-danger">
+                                                   <i class="material-icons">not_interested</i>
+                                                </a> </td>
+                                            </tr>
+                                         {% endfor %}
+	                                     </tbody>
+	                                </table>
+	                            </div>
+
+                             <div class="col-md-12 col-lg-12 text-center">
+                                <nav aria-label="Page navigation">
+                                    <ul class="pagination pagination-lg">
+                                        {% for pagina in paginasClientes %}
+                                                <li class="page-item">
+                                                    <button class="page-link" value="{{ pagina }}">{{ pagina }}</button>
+                                                </li>
+                                         {% endfor %}
+                                        </#if>
+                                    </ul>
+                                </nav>
+                             </div>
+
+	                        </div>
+						</div>
+
+
+
+					</div>
+				</div>
+			</div>
+
+		</div>
+	</div>
+
+    <!-- Modal -->
+<div id="addClientModal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Agregar un Nuevo Cliente</h4>
+      </div>
+      <div class="modal-body">
+
+                      <form class="form" method="post" action ="/addCliente">
+    <div class="form-group">
+    <label for="email">Nombre Completo:</label>
+    <input type="text" class="form-control" id="email" name="name">
+  </div>
+  <div class="form-group">
+    <label for="pwd">    Pais:</label>
+    <select class="form-control" id="sel1" name="pais">
+          {% for value in paises %}
+            <option>{{ value }}</option>
+         {% endfor %}
+  </select>
+
+  </div>
+          <button type="submit" class="btn btn-success">Agregar</button>
+</form>
+
+      </div>
+    </div>
+
+  </div>
+</div>
+
+
+    <!-- Modal -->
+<div id="addProductoModal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Agregar un Nuevo Producto</h4>
+      </div>
+      <div class="modal-body">
+
+                      <form class="form" method="post" action ="/addProducto">
+    <div class="form-group">
+    <label for="email">Nombre Completo:</label>
+    <input type="text" class="form-control" id="email" name="name">
+  </div>
+  <div class="form-group">
+    <label for="email">Precio:</label>
+    <input type="text" class="form-control" id="email" name="precio">
+  </div>
+  <div class="form-group">
+    <label for="email">Cantidad Disponible:</label>
+    <input type="text" class="form-control" id="email" name="cantidad">
+  </div>
+                           <div class="col-md-7">
+       <select class="form-control" id="sel2" name="producto">
+          {% for value in listSuplidores %}
+            <option>{{ value.nombre }}</option>
+         {% endfor %}
+  </select>
+                           </div>
+  <div class="col-md-3">
+     <input type="text" class="form-control" id="dias" name="dias" placeholder="dias">
+    <input type="hidden" class="form-control" id="ListaSuplidoresNombre" name="listaSuplidoresNombre">
+    <input type="hidden" class="form-control" id="ListaSuplidoresDias" name="listaSuplidoresDias">
+  </div>
+      <div class="col-md-2">
+     <a class="btn btn-info" id="addProduct" style="margin-top: 24px">+</a>
+      </div>
+                      <div>
+
+           <table class="table">
+                          <thead>
+                          <tr>
+                              <td>Suplidor</td>
+                              <td>Dias para Entrega</td>
+                          </tr>
+                          </thead>
+                          <tbody id="SuplidoresList">
+
+                          </tbody>
+                      </table>
+                      </div>
+          <button type="submit" class="btn btn-info">Agregar</button>
+</form>
+
+      </div>
+    </div>
+
+  </div>
+</div>
+
+
+
+        <!-- Modal -->
+<div id="SuplirModal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Suplir Producto</h4>
+      </div>
+      <div class="modal-body">
+
+          <form class="form" method="post" action ="/suplirProducto">
+   <div class="col-md-12">
+      <label for="pwd">    Productos: </label>
+  </div>
+
+      <div class="col-md-9">
+    <select class="form-control" id="sel2" name="producto">
+          {% for value in listProductos %}
+            <option>{{ value.nombre}}</option>
+         {% endfor %}
+  </select>
+  </div>
+  <div class="col-md-3">
+     <input type="text" class="form-control" id="cantidad" name="cantidad" placeholder="cant">
+  </div>
+          <button type="submit" class="btn btn-primary">Suplir</button>
+</form>
+
+      </div>
+    </div>
+
+  </div>
+</div>
+
+    <!-- Modal -->
+<div id="addSuplidorModal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Agregar un Nuevo Suplidor</h4>
+      </div>
+      <div class="modal-body">
+
+                      <form class="form" method="post" action ="/addSuplidor">
+    <div class="form-group">
+    <label for="email">Nombre Suplidor:</label>
+    <input type="text" class="form-control" id="email" name="name">
+  </div>
+          <button type="submit" class="btn btn-primary">Agregar</button>
+</form>
+
+      </div>
+    </div>
+
+  </div>
+</div>
+
+
+
+</body>
+
+	<!--   Core JS Files   -->
+	<script src="static/assets/js/jquery-3.1.0.min.js" type="text/javascript"></script>
+	<script src="static/assets/js/bootstrap.min.js" type="text/javascript"></script>
+	<script src="static/assets/js/material.min.js" type="text/javascript"></script>
+
+	<!--  Charts Plugin -->
+	<script src="static/assets/js/chartist.min.js"></script>
+
+	<!--  Notifications Plugin    -->
+	<script src="static/assets/js/bootstrap-notify.js"></script>
+
+	<!--  Google Maps Plugin    -->
+	<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js"></script>
+
+	<!-- Material Dashboard javascript methods -->
+	<script src="static/assets/js/material-dashboard.js"></script>
+
+	<!-- Material Dashboard DEMO methods, don't include it in your project! -->
+	<script src="static/assets/js/demo.js"></script>
+
+	<script type="text/javascript">
+    	$(document).ready(function(){
+
+			// Javascript method's body can be found in assets/js/demos.js
+        	demo.initDashboardPageCharts();
+
+    	});
+	</script>
+
+   <script>
+        $(document).ready(function(){
+            $(".page-link").click(function(){
+                $.get("/cargarDatosClientes/" + $(this).val(), function(data){
+                    $("#clientes").html(data);
+                });
+            });
+        })
+    </script>
+
+    <script>
+        $(document).ready(function(){
+            $(".page-link2").click(function(){
+                $.get("/cargarDatosProductos/" + $(this).val(), function(data){
+                    $("#productos").html(data);
+                });
+            });
+        })
+
+    </script>
+
+<script>
+        $(document).ready(function(){
+            $(".page-link3").click(function(){
+                $.get("/cargarDatosSuplidores/" + $(this).val(), function(data){
+                    $("#suplidores").html(data);
+                });
+            });
+        })
+
+    </script>
+
+
+<script>
+        $(document).ready(function(){
+            $("#dias").val(10);
+        })
+    </script>
+
+   <script>
+
+       var ListaSuplidoresNombre =[]
+       var ListaSuplidoresDias =[]
+
+
+        $(document).ready(function() {
+
+            $(".close").click(function () {
+                $("#SuplidoresList").empty()
+                $("#ListaSuplidoresNombre").empty()
+                $("#ListaSuplidoresDias").empty()
+            });
+
+            $("#addProduct").click(function () {
+                var suplidorName = $("#sel2").val();
+                var suplidorDias = $("#dias").val();
+                ListaSuplidoresNombre.push(suplidorName);
+                ListaSuplidoresDias.push(suplidorDias);
+
+                $("#SuplidoresList").append("<tr>" + "<td>" + suplidorName + "</td>" + "<td>" + suplidorDias + "</td>" + "</tr>")
+                $("#cantidad").val(10);
+                $("#ListaSuplidoresNombre").val(ListaSuplidoresNombre)
+                $("#ListaSuplidoresDias").val(ListaSuplidoresDias)
+            });
+        });
+</script>
+
+
+</html>

@@ -1,11 +1,46 @@
-<div style="height: 35vh; padding-top: 10px" class="text-center" id="chart_div5">
+<div style="width: 60%; margin-left: 20%; padding: 10px" class="text-center" id="chart_div5">
 
-    <h4 style="font-weight: 700">Estimacion del control de inventario de {{ producto }} desde hoy hasta la fecha {{ fecha }}</h4>
- <h4 style="font-weight: 700">hay {{ resultado["DiasDiferencia"] }} dias de diferencia hasta esta fecha.</h4>
- <h4 style="font-weight: 700">Actualmente en inventario existen {{ resultado["cantDisponible"] }} de este producto.</h4>
-<h4 style="font-weight: 700">En el mes pasado se promedio {{ resultado["promedioVenta"] }} ventas/dia y tomando en cuenta un 15% de margen de error serian {{ resultado["VentasConError"] }} ventas/dia.</h4>
- <h4 style="font-weight: 700">El mejor suplidor para este producto es {{ resultado["MejorSuplidor"] }} y hace entrega de sus pedidos en {{ resultado["MejorSuplidorDelay"] }} dias.</h4>
- <h4 style="font-weight: 700">Actualmente en inventario existen {{ resultado["cantDisponible"] }} de este producto.</h4>
-    <h4 style="font-weight: 700">Hay {{ resultado["DiasDisponiblesConRespaldo"] }} dias de ventas disponibles en inventario.</h4>
-    <h4 style="font-weight: 700">Para poder tener en invetario productos disponibles hay que hacer una orden el:  {{ resultado["fechaParaOrden"] }}.</h4>
+    <h3 style="font-weight: 700">Ordenes A Realizar</h3>
+
+  {% for value in resultados %}
+    <div style="border: 2px solid white; margin: 10px">
+        <table class="table">
+            <tr>
+                <th>No. Orden:</th>
+                 <td>{{loop.index}}</td>
+                <td></td>
+                <th>Suplidor:</th>
+                 <td>{{ value["MejorSuplidor"] }}</td>
+            </tr>
+
+            <tr>
+                <th>Fecha Orden:</th>
+                 <td>{{ value["fechaParaOrden"] }}</td>
+                <td></td>
+                <th>Monto Total:</th>
+                 <td>${{ value["totalPrecio"] }}</td>
+            </tr>
+
+
+            <tr>
+                <th>Producto</th>
+                <th>Cantidad</th>
+                <th>Precio Unidad</th>
+            </tr>
+
+            {% for pro in value["productos"] %}
+
+            <tr>
+                <td>{{pro["productoNombre"]}}</td>
+                <td>{{pro["cantidadPedir"]}}</td>
+                <td>{{pro["precioUnidad"]}}</td>
+            </tr>
+    {% endfor %}
+
+        </table>
+    </div>
+    {% endfor %}
+
+
+
 </div>

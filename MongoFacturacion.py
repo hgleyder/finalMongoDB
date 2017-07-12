@@ -105,10 +105,11 @@ def addProducto():
     precio = request.form.get('precio')
     listaSuplidoresNombre = request.form.get('listaSuplidoresNombre').split(",")
     listaSuplidoresDias = request.form.get('listaSuplidoresDias').split(",")
+    listaSuplidoresPrecios = request.form.get('listaSuplidoresPrecios').split(",")
     listaSuplidores = []
 
     for i in list(range(0, len(listaSuplidoresNombre))):
-        ob = {"nombre": listaSuplidoresNombre[i], "dias": int(listaSuplidoresDias[i])}
+        ob = {"nombre": listaSuplidoresNombre[i], "dias": int(listaSuplidoresDias[i]), "precio": float(listaSuplidoresPrecios[i])}
         listaSuplidores.append(ob)
     cantidad = request.form.get('cantidad')
     insertNewProducto(name,precio,cantidad,listaSuplidores)
@@ -174,11 +175,18 @@ def RouteEstadisticaBestProducto(year,mes):
     return render_template("ajax/estadisticas/BestProducto.html", year = year, mes = mes, resultado = resultado)
 
 
-@app.route('/estadisticas/EstimarInventario/<prod>/<fecha>', methods=['GET'])
-def RouteEstadisticaEstimarInventario(prod,fecha):
-    resultado = EstimarInventario(prod,fecha)
-    print resultado
-    return render_template("ajax/estadisticas/EstimarInventario.html", resultado = resultado, producto = prod, fecha=fecha)
+@app.route('/estadisticas/EstimarInventario/<fecha>', methods=['POST'])
+def RouteEstadisticaEstimarInventario(fecha):
+    ResultadosFinales = []
+    listaProductos = request.form.get('listaProducto').split(",")
+    print listaProductos
+    for producto in listaProductos:
+        resultado = EstimarInventario(producto,fecha)
+        print resultado
+        ResultadosFinales.append(resultado)
+    r = OrdenesParaElProfe(ResultadosFinales)
+
+    return render_template("ajax/estadisticas/EstimarInventario.html", resultados = r)
 
 
 @app.route('/cargarDatosClientes/<pag>', methods=['GET'])

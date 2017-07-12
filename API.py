@@ -222,20 +222,14 @@ def EstimarInventario(producto,fecha):
     diasDeDiferencia += (int(fechaEstimacion[1]) - fechaActual.month)*30
     diasDeDiferencia += (int(fechaEstimacion[0])-fechaActual.day)
 
-    #-- Mejor Suplidor
     prod = db.productos.find_one({"nombre": producto})
-    mejorSuplidor = prod['suplidores'][0]
-    for sup in prod['suplidores']:
-        if sup['dias'] < mejorSuplidor['dias']:
-            mejorSuplidor = sup
-
 
     #-- Cantidad Actual Disponible
     cantDisponible = prod["CantidadDisponible"]
 
     #-- Cantidad ventas Mes Pasado
     pipeline = [
-        {"$match": {"anio": int(fechaActual.year), "mes": int(fechaActual.month - 1) }},
+        {"$match": {"anio": int(fechaActual.year)}},
         {"$unwind": "$productos"},
         {"$match": {"productos.nombre": producto}},
         {"$group": {
@@ -243,24 +237,55 @@ def EstimarInventario(producto,fecha):
             "total": {"$sum": "$productos.cantidad"}
         }}
     ]
+
+    diasT = (fechaActual.month *30) + fechaActual.day
+
     var = db.facturas.aggregate(pipeline)
-    promedioVenta = float(list(var)[0]['total']) / 30
+    promedioVenta = float(list(var)[0]['total']) / diasT
     promedioVenta = promedioVenta
+
+    VentasDiariasConError = math.ceil(promedioVenta + (promedioVenta*0.15))
+    DiasDisponiblesEnRespaldo = int(int(cantDisponible) / VentasDiariasConError)
+
+    #-- Mejor Suplidor
+    mejorSuplidor = prod['suplidores'][0]
+    for sup in prod['suplidores']:
+        if float(sup['precio']) < float(mejorSuplidor['precio']) and int(sup['dias']) < DiasDisponiblesEnRespaldo:
+            mejorSuplidor = sup
+
 
     #-------------- Calculo
 
-    VentasDiariasConError = math.ceil(promedioVenta + (promedioVenta*0.15))
-
-    DiasDisponiblesEnRespaldo = int(int(cantDisponible) / VentasDiariasConError)
 
     fechaParaOrden = ""
     if diasDeDiferencia <= DiasDisponiblesEnRespaldo:
         fechaParaOrden = "El inventario actual es suficiente para esta fecha"
+        cantidadPedir = 0
     else:
         diasAux = DiasDisponiblesEnRespaldo - int(mejorSuplidor['dias'])
         fecha =datetime.now() + timedelta(days=diasAux)
-        fechaParaOrden = str(fecha.day)+"/"+str(fecha.month)+"/"+str(fecha.year)+" y se ordenaran "+str((diasDeDiferencia-DiasDisponiblesEnRespaldo)*VentasDiariasConError)+" unidades"
+        fechaParaOrden = str(fecha.day)+"/"+str(fecha.month)+"/"+str(fecha.year)
+        cantidadPedir = (diasDeDiferencia-DiasDisponiblesEnRespaldo)*VentasDiariasConError
 
     return {"fechaParaOrden": fechaParaOrden, "VentasConError": VentasDiariasConError, "DiasDisponiblesConRespaldo": DiasDisponiblesEnRespaldo,
-            "MejorSuplidor": mejorSuplidor['nombre'], "MejorSuplidorDelay": int(mejorSuplidor['dias']), "cantDisponible": int(cantDisponible),
-            "promedioVenta": promedioVenta, "DiasDiferencia": diasDeDiferencia}
+            "MejorSuplidor": mejorSuplidor['nombre'], "MejorSuplidorDelay": int(mejorSuplidor['dias']),"MejorSuplidorPrecioUnidad": float(mejorSuplidor['precio']), "cantDisponible": int(cantDisponible),
+            "promedioVenta": promedioVenta, "DiasDiferencia": diasDeDiferencia, "productoNombre": producto, "cantidadPedir": cantidadPedir}
+
+
+def OrdenesParaElProfe(ordenes):
+    elem = []
+    for ord in ordenes:
+        esta = False
+        for e in elem:
+            if e["fechaParaOrden"] == ord["fechaParaOrden"] and e["MejorSuplidor"] == ord["MejorSuplidor"]:
+                e["productos"].append({"productoNombre": ord["productoNombre"], "cantidadPedir": ord["cantidadPedir"], "precioUnidad": ord["MejorSuplidorPrecioUnidad"]})
+                precioAux = float(ord["cantidadPedir"]) * float(ord["MejorSuplidorPrecioUnidad"])
+                e["totalPrecio"]+=precioAux
+                esta = True
+
+        if not esta:
+            precioAux = float(ord["cantidadPedir"]) * float(ord["MejorSuplidorPrecioUnidad"])
+            aux = {"totalPrecio":precioAux, "fechaParaOrden": ord["fechaParaOrden"], "MejorSuplidor": ord["MejorSuplidor"], "productos": [{"productoNombre": ord["productoNombre"], "cantidadPedir": ord["cantidadPedir"], "precioUnidad": ord["MejorSuplidorPrecioUnidad"]}]}
+            elem.append(aux)
+
+    return elem

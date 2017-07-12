@@ -354,20 +354,24 @@
     <label for="email">Cantidad Disponible:</label>
     <input type="text" class="form-control" id="email" name="cantidad">
   </div>
-                           <div class="col-md-7">
+                           <div class="col-md-6">
        <select class="form-control" id="sel2" name="producto">
           {% for value in listSuplidores %}
             <option>{{ value.nombre }}</option>
          {% endfor %}
   </select>
                            </div>
-  <div class="col-md-3">
+  <div class="col-md-2">
      <input type="text" class="form-control" id="dias" name="dias" placeholder="dias">
     <input type="hidden" class="form-control" id="ListaSuplidoresNombre" name="listaSuplidoresNombre">
     <input type="hidden" class="form-control" id="ListaSuplidoresDias" name="listaSuplidoresDias">
+          <input type="hidden" class="form-control" id="ListaSuplidoresPrecios" name="listaSuplidoresPrecios">
+  </div>
+                          <div class="col-md-2">
+      <input type="text" class="form-control" id="preciosup" name="preciosup" placeholder="precio">
   </div>
       <div class="col-md-2">
-     <a class="btn btn-info" id="addProduct" style="margin-top: 24px">+</a>
+     <a class="btn btn-info" id="addProduct" style="margin-top: 8px">+</a>
       </div>
                       <div>
 
@@ -376,6 +380,7 @@
                           <tr>
                               <td>Suplidor</td>
                               <td>Dias para Entrega</td>
+                              <td>Precio Por Unidad</td>
                           </tr>
                           </thead>
                           <tbody id="SuplidoresList">
@@ -532,7 +537,7 @@
 
        var ListaSuplidoresNombre =[]
        var ListaSuplidoresDias =[]
-
+       var ListaSuplidoresPrecios =[]
 
         $(document).ready(function() {
 
@@ -540,18 +545,21 @@
                 $("#SuplidoresList").empty()
                 $("#ListaSuplidoresNombre").empty()
                 $("#ListaSuplidoresDias").empty()
+                  $("#ListaSuplidoresPrecios").empty()
             });
 
             $("#addProduct").click(function () {
                 var suplidorName = $("#sel2").val();
                 var suplidorDias = $("#dias").val();
+                var suplidorPrecio = $("#preciosup").val();
                 ListaSuplidoresNombre.push(suplidorName);
                 ListaSuplidoresDias.push(suplidorDias);
+                ListaSuplidoresPrecios.push(suplidorPrecio);
 
-                $("#SuplidoresList").append("<tr>" + "<td>" + suplidorName + "</td>" + "<td>" + suplidorDias + "</td>" + "</tr>")
-                $("#cantidad").val(10);
+                $("#SuplidoresList").append("<tr>" + "<td>" + suplidorName + "</td>" + "<td>" + suplidorDias + "</td>"+ "<td>" + suplidorPrecio + "</td>" + "</tr>")
                 $("#ListaSuplidoresNombre").val(ListaSuplidoresNombre)
                 $("#ListaSuplidoresDias").val(ListaSuplidoresDias)
+                $("#ListaSuplidoresPrecios").val(ListaSuplidoresPrecios)
             });
         });
 </script>

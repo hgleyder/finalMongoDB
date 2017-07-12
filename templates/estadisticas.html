@@ -247,14 +247,14 @@
                      <div class="col-md-12">
 							<div class="card">
 								<div class="card-header card-chart" data-background-color="purple" style="background-color: white">
-									<div style="height: 35vh;" class="ct-chart" id="divChartEstimarInventario"></div>
+									<div class="ct-chart" id="divChartEstimarInventario"></div>
 								</div>
 								<div class="card-content">
 									<h4 class="title">Estimacion de Inventario para el Producto en la fecha seleccionada</h4>
-									<div class="col-md-5">
+                                    <div class="col-md-7">
                                     <input type="text" class="form-control" placeholder="01-12-2017" id="c5fecha" name="producto" />
                                     </div>
-                                    <div class="col-md-5">
+                                    <div class="col-md-7">
                                     <select class="form-control" id="c5producto" name="producto">
                                         {% for value2 in productos2 %}
                                       <option>{{ value2.nombre}}</option>
@@ -264,8 +264,32 @@
 
                                     <div class="col-md-2">
                                         <br>
-                                    <a id="reloadChartEstimarInventario" class="btn btn-primary" style="margin-top: 2px">Ver</a>
-                                     </select>
+                                    <a id="addProduct" class="btn btn-primary" style="margin-top: 2px">+</a>
+                                    </div>
+                                   <input type="hidden" class="form-control" id="ListaProductosNombre" name="ListaProductosNombre22">
+
+                      <div class="col-md-12">
+
+                        <table class="table">
+                          <thead>
+                          <tr>
+                              <td>Nombre de Productos para Calcular Ordenes</td>
+                                <td>
+                                    <div class="col-md-2">
+                                    <a id="bottonReset" class="btn btn-danger" style="margin-top: 2px">Reset</a>
+                                    </div>
+                                </td>
+                          </tr>
+                          </thead>
+                          <tbody id="ProductList">
+
+                          </tbody>
+                      </table>
+                      </div>
+                                <div class="col-md-12">
+                                        <br>
+
+                                    <a id="reloadChartEstimarInventario" class="btn btn-primary" style="width: 100%;margin-top: 2px">Ver</a>
                                     </div>
 								</div>
 							</div>
@@ -370,13 +394,44 @@
             $("#reloadChartEstimarInventario").click(function(){
                 var date = $("#c5fecha").val();
                 var prod = $("#c5producto").val();
-                  console.log(date)
-                $.get("/estadisticas/EstimarInventario/"+prod+"/"+date, function(data){
+                  console.log(date);
+                console.log(   $("#ListaProductosNombre").val())
+                $.post("/estadisticas/EstimarInventario/"+date,{
+                    listaProducto:  $("#ListaProductosNombre").val()
+                }, function(data){
                     $("#divChartEstimarInventario").html(data);
                 });
             });
         })
     </script>
+
+ <script>
+
+       var ListaProductosNombre =[]
+
+        $(document).ready(function() {
+            $("#bottonReset").hide();
+            $("#addProduct").click(function () {
+                 $("#bottonReset").show();
+                var productName = $("#c5producto").val();
+                ListaProductosNombre.push(productName);
+                $("#ProductList").append("<tr>" + "<td>" + productName + "</td>"+ "</tr>")
+                $("#ListaProductosNombre").val(ListaProductosNombre)
+                console.log(   $("#ListaProductosNombre").val())
+            });
+
+             $("#bottonReset").click(function () {
+                 $("#bottonReset").hide();
+                var productName = $("#c5producto").val();
+                $("#ProductList").empty();
+                ListaProductosNombre = [];
+                 $("#ListaProductosNombre").empty();
+            });
+        });
+</script>
+
+
+
 
 </body>
 
